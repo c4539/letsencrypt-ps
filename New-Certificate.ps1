@@ -9,7 +9,7 @@ $ISSWebSite = "Default Web Site"
 function Fix-WebConfig {
     $webconfigfilename = "C:\inetpub\wwwroot\.well-known\acme-challenge\web.config"
     [XML] $webconf = Get-Content $webconfigfilename
-    $webconf.configuration.'system.webServer'.handlers.RemoveChild($webconf.configuration.'system.webServer'.handlers)
+    $webconf.configuration.'system.webServer'.RemoveChild($webconf.configuration.'system.webServer'.handlers)
     $webconf.OuterXml.ToString() | Out-File -Encoding utf8 $webconfigfilename
 }
 
