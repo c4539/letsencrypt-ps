@@ -58,5 +58,5 @@ Install-ACMECertificate -CertificateRef $Certname -Installer iis -InstallerParam
     WebSiteRef = $ISSWebSite
     BindingHost = $Domain
     BindingPort = 443
-    CertificateFriendlyName = 'LetsEncryptCert'
+    CertificateFriendlyName = $Certname
   }
