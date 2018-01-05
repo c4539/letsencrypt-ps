@@ -1,9 +1,9 @@
 # Enable extension modules needed for IIS
-Admin PS> Import-Module ACMESharp
-Admin PS> Enable-ACMEExtensionModule -ModuleName ACMESharp.Providers.IIS
+Import-Module ACMESharp
+Enable-ACMEExtensionModule -ModuleName ACMESharp.Providers.IIS
 
 # Verify the module was enabled
-Admin PS> Get-ACMEExtensionModule | Select-Object -Expand Name
+Get-ACMEExtensionModule | Select-Object -Expand Name
 # You should see this:
 ACMESharp.Providers.IIS
 
