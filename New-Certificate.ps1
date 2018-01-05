@@ -6,6 +6,13 @@ if (! (Get-Module ACMESharp)) {
 
 $ISSWebSite = "Default Web Site"
 
+function Fix-WebConfig {
+    $webconfigfilename = "C:\inetpub\wwwroot\.well-known\acme-challenge\web.config"
+    [XML] $webconf = Get-Content $webconfigfilename
+    $webconf.configuration.'system.webServer'.handlers.RemoveAll()
+    $webconf.OuterXml.ToString() | Out-File $webconfigfilename
+}
+
 $Domain = Read-Host -Prompt "FQDN"
 $Alias = $Domain + "-01"
 $Certname = $Domain + "-$(get-date -format yyyy-MM-dd--HH-mm)"
@@ -15,6 +22,9 @@ New-ACMEIdentifier -Dns $Domain -Alias $Alias
 
 # Handle the challenge using HTTP validation on IIS
 Complete-ACMEChallenge -IdentifierRef $Alias -ChallengeType http-01 -Handler iis -HandlerParameters @{ WebSiteRef = $ISSWebSite }
+
+# Fix web.config bug
+Fix-WebConfig
 
 # Tell Let's Encrypt it's OK to validate now
 Submit-ACMEChallenge -IdentifierRef $Alias -ChallengeType http-01
@@ -44,7 +54,7 @@ Submit-ACMECertificate -CertificateRef $Certname
 Update-ACMECertificate -CertificateRef $Certname
 
 # Install Certificate
-Install-ACMECertificate -CertificateRef $Certname -Installer iis -Force -InstallerParameters @{
+Install-ACMECertificate -CertificateRef $Certname -Installer iis -InstallerParameters @{
     WebSiteRef = $ISSWebSite
     BindingHost = $Domain
     BindingPort = 443
