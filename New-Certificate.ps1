@@ -44,11 +44,8 @@ if($i -gt 10) {
     Exit
 }
 
-# BREAK
-Return
-
 # Generate Certificate
-New-ACMECertificate -Generate -IdentifierRef $Alias  -Alias $Certname
+New-ACMECertificate -Generate -IdentifierRef $Alias -Alias $Certname
 
 # Submit the certificate request to Let's Encrypt
 Submit-ACMECertificate -CertificateRef $Certname
