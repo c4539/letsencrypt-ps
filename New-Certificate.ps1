@@ -59,4 +59,5 @@ Install-ACMECertificate -CertificateRef $Certname -Installer iis -InstallerParam
     BindingHost = $Domain
     BindingPort = 443
     CertificateFriendlyName = $Certname
+    Force = $true
   }
