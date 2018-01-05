@@ -24,6 +24,7 @@ New-ACMEIdentifier -Dns $Domain -Alias $Alias
 Complete-ACMEChallenge -IdentifierRef $Alias -ChallengeType http-01 -Handler iis -HandlerParameters @{ WebSiteRef = $ISSWebSite }
 
 # Fix web.config bug
+Return
 Fix-WebConfig
 
 # Tell Let's Encrypt it's OK to validate now
