@@ -9,8 +9,8 @@ $ISSWebSite = "Default Web Site"
 function Fix-WebConfig {
     $webconfigfilename = "C:\inetpub\wwwroot\.well-known\acme-challenge\web.config"
     [XML] $webconf = Get-Content $webconfigfilename
-    $webconf.configuration.'system.webServer'.handlers.RemoveAll()
-    $webconf.OuterXml.ToString() | Out-File $webconfigfilename
+    $webconf.configuration.'system.webServer'.handlers.RemoveChild($webconf.configuration.'system.webServer'.handlers)
+    $webconf.OuterXml.ToString() | Out-File -Encoding utf8 $webconfigfilename
 }
 
 $Domain = Read-Host -Prompt "FQDN"
@@ -24,7 +24,6 @@ New-ACMEIdentifier -Dns $Domain -Alias $Alias
 Complete-ACMEChallenge -IdentifierRef $Alias -ChallengeType http-01 -Handler iis -HandlerParameters @{ WebSiteRef = $ISSWebSite }
 
 # Fix web.config bug
-Return
 Fix-WebConfig
 
 # Tell Let's Encrypt it's OK to validate now
@@ -44,6 +43,9 @@ if($i -gt 10) {
     Write-Error "We did not receive a completed certificate after 60 seconds"
     Exit
 }
+
+# BREAK
+Return
 
 # Generate Certificate
 New-ACMECertificate -Generate -IdentifierRef $Alias  -Alias $Certname
