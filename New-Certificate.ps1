@@ -1,3 +1,8 @@
+# Enable extension modules needed for IIS
+Import-Module ACMESharp
+Enable-ACMEExtensionModule -ModuleName ACMESharp.Providers.IIS
+
+
 $ISSWebSite = "Default Web Site"
 
 $Domain = Read-Host -Prompt "FQDN"
