@@ -2,8 +2,6 @@
 if (! (Get-Module ACMESharp)) {
     # Import ACMESharp module
     Import-Module ACMESharp
-    # Enable extension modules needed for IIS
-    Enable-ACMEExtensionModule -ModuleName ACMESharp.Providers.IIS
 }
 
 $ISSWebSite = "Default Web Site"
