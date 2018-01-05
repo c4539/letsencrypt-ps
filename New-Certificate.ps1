@@ -1,7 +1,10 @@
-# Enable extension modules needed for IIS
-#Import-Module ACMESharp
-#Enable-ACMEExtensionModule -ModuleName ACMESharp.Providers.IIS
-
+# Import module ACMESharp (if not yet loaded)
+if (! (Get-Module ACMESharp)) {
+    # Import ACMESharp module
+    Import-Module ACMESharp
+    # Enable extension modules needed for IIS
+    Enable-ACMEExtensionModule -ModuleName ACMESharp.Providers.IIS
+}
 
 $ISSWebSite = "Default Web Site"
 
