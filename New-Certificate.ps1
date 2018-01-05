@@ -14,7 +14,7 @@ function Fix-WebConfig {
 }
 
 $Domain = Read-Host -Prompt "FQDN"
-$Alias = $Domain + "-01"
+$Alias = $Domain + "-$(get-date -format yyyy-MM-dd--HH-mm)"
 $Certname = $Domain + "-$(get-date -format yyyy-MM-dd--HH-mm)"
 
 # Create a new Identifier with Let's Encrypt
