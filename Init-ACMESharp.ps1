@@ -3,9 +3,7 @@ Import-Module ACMESharp
 Enable-ACMEExtensionModule -ModuleName ACMESharp.Providers.IIS
 
 # Verify the module was enabled
-Get-ACMEExtensionModule | Select-Object -Expand Name
-# You should see this:
-ACMESharp.Providers.IIS
+#Get-ACMEExtensionModule | Select-Object -Expand Name
 
 # Initialize a local ACMESharp Vault to store states and assets
 Initialize-ACMEVault
