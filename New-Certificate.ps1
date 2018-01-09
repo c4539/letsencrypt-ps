@@ -4,7 +4,11 @@ if (! (Get-Module ACMESharp)) {
     Import-Module ACMESharp
 }
 
-$ISSWebSite = "Default Web Site"
+# Import configuration
+. (Join-Path -Path (Split-Path -Path $PSCommandPath -Parent) -ChildPath 'config.ps1')
+
+#$ISSWebSite = "Default Web Site"
+# Moved to config.ps1
 
 ##############################
 #.SYNOPSIS
@@ -15,10 +19,12 @@ $ISSWebSite = "Default Web Site"
 #
 ###############################
 function Fix-WebConfig {
-    $webconfigfilename = "C:\inetpub\wwwroot\.well-known\acme-challenge\web.config"
-    [XML] $webconf = Get-Content $webconfigfilename
+    #$webconfigfilename = "C:\inetpub\wwwroot\.well-known\acme-challenge\web.config"
+    # Moved to config.ps1
+
+    [XML] $webconf = Get-Content $GLOBAL:webconfigfilename
     $webconf.configuration.'system.webServer'.RemoveChild($webconf.configuration.'system.webServer'.handlers)
-    $webconf.OuterXml.ToString() | Out-File -Encoding utf8 $webconfigfilename
+    $webconf.OuterXml.ToString() | Out-File -Encoding utf8 $GLOBAL:webconfigfilename
 }
 
 $Domain = Read-Host -Prompt "FQDN"
@@ -29,7 +35,7 @@ $Certname = $Domain + "-$(get-date -format yyyy-MM-dd--HH-mm)"
 New-ACMEIdentifier -Dns $Domain -Alias $Alias
 
 # Handle the challenge using HTTP validation on IIS
-Complete-ACMEChallenge -IdentifierRef $Alias -ChallengeType http-01 -Handler iis -HandlerParameters @{ WebSiteRef = $ISSWebSite }
+Complete-ACMEChallenge -IdentifierRef $Alias -ChallengeType http-01 -Handler iis -HandlerParameters @{ WebSiteRef = $GLOBAL:ISSWebSite }
 
 # Fix web.config bug
 Fix-WebConfig
@@ -63,7 +69,7 @@ Update-ACMECertificate -CertificateRef $Certname
 
 # Install Certificate
 Install-ACMECertificate -CertificateRef $Certname -Installer iis -InstallerParameters @{
-    WebSiteRef = $ISSWebSite
+    WebSiteRef = $GLOBAL:ISSWebSite
     BindingHost = $Domain
     BindingPort = 443
     CertificateFriendlyName = $Certname
