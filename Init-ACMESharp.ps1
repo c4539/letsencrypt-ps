@@ -3,13 +3,14 @@ Import-Module ACMESharp
 Enable-ACMEExtensionModule -ModuleName ACMESharp.Providers.IIS
 
 # Import configuration
-. (Join-Path -Path (Split-Path -Path $PSCommandPath -Parent) -ChildPath 'config.ps1')
+. (Join-Path -Path (Split-Path -Path $PSCommandPath -Parent) -ChildPath 'Config\Config.ps1')
 
 # Verify the module was enabled
 #Get-ACMEExtensionModule | Select-Object -Expand Name
 
 # Initialize a local ACMESharp Vault to store states and assets
 Initialize-ACMEVault
+# Initialize-ACMEVault -BaseService LetsEncrypt-STAGING
 
 # Register Account
 # TODO: Prompt for email address / contact information if $GLOBAL:AcemeContact is empty or unset

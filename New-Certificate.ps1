@@ -5,7 +5,7 @@ if (! (Get-Module ACMESharp)) {
 }
 
 # Import configuration
-. (Join-Path -Path (Split-Path -Path $PSCommandPath -Parent) -ChildPath 'config.ps1')
+. (Join-Path -Path (Split-Path -Path $PSCommandPath -Parent) -ChildPath 'Config\Config.ps1')
 
 #$ISSWebSite = "Default Web Site"
 # Moved to config.ps1
