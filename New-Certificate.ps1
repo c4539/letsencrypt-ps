@@ -6,6 +6,14 @@ if (! (Get-Module ACMESharp)) {
 
 $ISSWebSite = "Default Web Site"
 
+##############################
+#.SYNOPSIS
+#A quick fix for the web.config
+#
+#.DESCRIPTION
+#This is a quick fix to remove unnecessary / incorrect configuration from the web.config file.
+#
+###############################
 function Fix-WebConfig {
     $webconfigfilename = "C:\inetpub\wwwroot\.well-known\acme-challenge\web.config"
     [XML] $webconf = Get-Content $webconfigfilename
