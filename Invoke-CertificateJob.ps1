@@ -47,31 +47,33 @@ $DomainFileLines | ForEach-Object {
         $Domain = $_
         $Alias = $Domain #+ "-$(get-date -format yyyy-MM-dd--HH-mm)"
 
-        # Create a new Identifier with Let's Encrypt
-        New-ACMEIdentifier -Dns $Domain -Alias $Alias
+        if (-not (Get-ACMEIdentifier $Alias) -or (Get-ACMEIdentifier $Alias).Status -ne "valid") {
+            # Create a new Identifier with Let's Encrypt
+            New-ACMEIdentifier -Dns $Domain -Alias $Alias
 
-        # Handle the challenge using HTTP validation on IIS
-        Complete-ACMEChallenge -IdentifierRef $Alias -ChallengeType http-01 -Handler iis -HandlerParameters @{ WebSiteRef = $GLOBAL:ISSWebSite }
+            # Handle the challenge using HTTP validation on IIS
+            Complete-ACMEChallenge -IdentifierRef $Alias -ChallengeType http-01 -Handler iis -HandlerParameters @{ WebSiteRef = $GLOBAL:ISSWebSite }
 
-        # Fix web.config bug
-        Fix-WebConfig
+            # Fix web.config bug
+            Fix-WebConfig
 
-        # Tell Let's Encrypt it's OK to validate now
-        Submit-ACMEChallenge -IdentifierRef $Alias -ChallengeType http-01
+            # Tell Let's Encrypt it's OK to validate now
+            Submit-ACMEChallenge -IdentifierRef $Alias -ChallengeType http-01
 
-        # Check the status of the certificate every 6 seconds until we have an answer; fail after a minute
-        $i = 0
-        do {
-            $IdentifierInfo = Update-ACMEIdentifier -IdentifierRef $Alias
-            if($IdentifierInfo.Status.toString() -ne "pending") {
-                Start-Sleep 6
-                $i++
+            # Check the status of the certificate every 6 seconds until we have an answer; fail after a minute
+            $i = 0
+            do {
+                $IdentifierInfo = Update-ACMEIdentifier -IdentifierRef $Alias
+                if($IdentifierInfo.Status.toString() -ne "pending") {
+                    Start-Sleep 6
+                    $i++
+                }
+            } until($IdentifierInfo.Status.toString() -ne "pending" -or $i -gt 10)
+
+            if($i -gt 10) {
+                Write-Error "We did not receive a completed certificate after 60 seconds"
+                Continue
             }
-        } until($IdentifierInfo.Status.toString() -ne "pending" -or $i -gt 10)
-
-        if($i -gt 10) {
-            Write-Error "We did not receive a completed certificate after 60 seconds"
-            Continue
         }
     }
 
