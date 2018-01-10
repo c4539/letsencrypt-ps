@@ -5,7 +5,6 @@ param(
 	[String]
 	$Certname
 ,
-	[ValidateScript({Test-Path -PathType Container -Path $_ })]
 	[Parameter(Mandatory=$true,Position=2)]
 	[String[]]
 	$Domains
