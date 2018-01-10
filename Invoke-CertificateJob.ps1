@@ -86,5 +86,5 @@ $DomainFileLines | ForEach-Object {
     # Update in order to retrieve the CA signer's public cert
     Update-ACMECertificate -CertificateRef $Certname
 
-    . $GLOBAL:HOOKSuccess 
+    . $GLOBAL:HOOKSuccess -Certname $Certname -Domains $Domains
 }
