@@ -1,1 +1,6 @@
-test.example.local
+test.example.local      test2.example.local
+test3.example.local     test4.example.local
+
+# And another Test Domain
+   test5.example.local test6.example.local
+
